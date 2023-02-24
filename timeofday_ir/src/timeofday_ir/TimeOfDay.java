@@ -16,10 +16,15 @@ package timeofday_ir;
  * @invar | 0 <= getMinutes() && getMinutes() <= 59
  */
 public class TimeOfDay {
-
-	public int getHours() { throw new RuntimeException("Not yet implemented"); }
 	
-	public int getMinutes() { throw new RuntimeException("Not yet implemented"); }
+	/**
+	 * @invar | 0 <= minutesSinceMidnight && minutesSinceMidnight < 24 * 60
+	 */
+	private int minutesSinceMidnight;
+
+	public int getHours() { return minutesSinceMidnight / 60; }
+	
+	public int getMinutes() { return minutesSinceMidnight % 60; }
 	
 	/**
 	 * @throws IllegalArgumentException | hours < 0 || 23 < hours
@@ -28,7 +33,14 @@ public class TimeOfDay {
 	 * @post | getHours() == hours
 	 * @post | getMinutes() == minutes
 	 */
-	public TimeOfDay(int hours, int minutes) { throw new RuntimeException("Not yet implemented"); }
+	public TimeOfDay(int hours, int minutes) {
+		if (hours < 0 || 23 < hours)
+			throw new IllegalArgumentException("`hours` out of range");
+		if (minutes < 0 || 59 < minutes)
+			throw new IllegalArgumentException("`minutes` out of range");
+		
+		minutesSinceMidnight = hours * 60 + minutes;
+	}
 	
 	/**
 	 * @pre | 0 <= hours && hours <= 23
@@ -36,7 +48,9 @@ public class TimeOfDay {
 	 * @post | getHours() == hours
 	 * @post | getMinutes() == old(getMinutes())
 	 */
-	public void setHours(int hours) { throw new RuntimeException("Not yet implemented"); }
+	public void setHours(int hours) {
+		this.minutesSinceMidnight = hours * 60 + minutesSinceMidnight % 60;
+	}
 	
 	/**
 	 * @pre | 0 <= minutes && minutes <= 59
@@ -44,5 +58,7 @@ public class TimeOfDay {
 	 * @post | getHours() == old(getHours())
 	 * @post | getMinutes() == minutes
 	 */
-	public void setMinutes(int minutes) { throw new RuntimeException("Not yet implemented"); }
+	public void setMinutes(int minutes) {
+		this.minutesSinceMidnight = (minutesSinceMidnight / 60) * 60 + minutes;
+	}
 }
